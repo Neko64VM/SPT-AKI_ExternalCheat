@@ -1,16 +1,13 @@
 ## 概要
-SPT-AKI 3.10.X 向けの外部チートです。チート開発に対する興味を失ったので公開しておきます。  
+SPT-AKI 3.11.3 向けの外部チートです。チート開発に対する興味を失ったので公開しておきます。  
 モダンなGUIメニューやビジュアルを兼ね備えています。研究、分析、学習や調査用にもどうぞ。
-
-### 注意
-最新バージョン（3.11.*）は非対応です。アップデートが面倒くさいです。
 
 ## 機能
 * Player ESP
 * Exfil ESP
-* Item ESP（WIP）
+* Item ESP（Not work）
 * Grenade ESP
-* MISCs
+* MISCs (Not Work)
 * MenuKey : INSERT
 
 ## 備考
