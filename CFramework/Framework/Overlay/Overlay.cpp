@@ -1,5 +1,6 @@
 #include "Overlay.h"
 #include <TlHelp32.h>
+#include "../Config/Config.h"
 
 void LoadStyle();
 

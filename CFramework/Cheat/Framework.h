@@ -3,18 +3,18 @@
 #include "../Framework/ImGui/imgui_impl_win32.h"
 #include "../Framework/ImGui/imgui_impl_dx11.h"
 #include "../Framework/ImGui/Custom.h"
-#include "SDK/CPlayer/CPlayer.h"
-#include "SDK/CExfil/CExfil.h"
-#include "SDK/CItem/CItem.h"
 #include "../Framework/ImGui/Fonts/fa.h"
 #include "../Framework/ImGui/Fonts/RobotoRegular.h"
 #include "../Framework/ImGui/Fonts/IconsFontAwesome6.h"
+#include "SDK/CPlayer/CPlayer.h"
+#include "SDK/CExfil/CExfil.h"
+#include "SDK/CItem/CItem.h"
 #include <mutex>
 
 class CFramework
 {
 public:
-    ImFont* icon;
+    ImFont* icon{ nullptr };
 
     void UpdateList();
     void UpdateStaticList();
@@ -22,10 +22,9 @@ public:
 	void RenderMenu();
 	void RenderESP();
     void MiscAll();
-    ~CFramework();
 private:
-    EFT* tarkov = new EFT();
-    CPlayer local, *pLocal = &local;
+    CGame* tarkov = new CGame();
+    CPlayer local;
 
     std::mutex m_mtxEntityList;
     std::mutex m_mtxExfilList;
@@ -66,6 +65,10 @@ private:
 
     ImColor CrosshairColor = { 0.f, 1.f, 0.f, 1.f };
 
+    ImColor TEXT_COLOR_DEFAULT{ 1.f, 1.f, 1.f, 1.f };
+    ImColor TEXT_COLOR_ATTENTION{ 1.f, 1.f, 0.f, 1.f };
+    ImColor TEXT_COLOR_WARNING{ 1.f, 0.f, 0.f, 1.f };
+
     void GetESPInfo(const int& SpawnType, std::string& vOutStr, ImColor& vOutColor);
 
     void DrawLine(ImVec2 a, ImVec2 b, ImColor color, float width)
@@ -94,4 +97,21 @@ private:
         ImGui::GetBackgroundDrawList()->AddText(ImGui::GetFont(), font_size, ImVec2(pos.x + 1.f, pos.y + 1.f), ImColor(0.f, 0.f, 0.f, 1.f), text, text + strlen(text), 1024, 0);
         ImGui::GetBackgroundDrawList()->AddText(ImGui::GetFont(), font_size, pos, color, text, text + strlen(text), 1024, 0);
     }
+
+    // Render.cpp
+    ImVec2 ToImVec2(const ImVec2& value); // Convert to int
+    ImVec2 ToImVec2(const Vector2& value);
+    ImColor WithAlpha(const ImColor& color, const float& alpha);
+    float GetHueFromTime(float speed = 5.0f);
+    ImColor GenerateRainbow(float speed = 5.0f);
+    void DrawLine(const Vector2 p1, const Vector2 p2, ImColor color, float thickness = 1.f);
+    void DrawBox(int right, int left, int top, int bottom, ImColor color, float thickness = 1.f);
+    void DrawCircle(const Vector2 pos, float size, ImColor color);
+    void DrawCircle(const Vector2 pos, float size, ImColor color, float alpha);
+    void DrawCircleFilled(const Vector2 pos, float size, ImColor color, float alpha);
+    void RectFilled(int x0, int y0, int x1, int y1, ImColor color);
+    void RectFilled(int x0, int y0, int x1, int y1, ImColor color, float alpha);
+    void HealthBar(int x, int y, int w, int h, int value, int v_max, ImColor shadow, float global_alpha);
+    void String(const Vector2 pos, ImColor color, float alpha, const char* text);
+    void StringEx(Vector2 pos, ImColor shadow_color, float global_alpht, float font_size, const char* text);
 };

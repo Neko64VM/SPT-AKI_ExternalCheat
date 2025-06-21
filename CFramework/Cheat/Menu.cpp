@@ -1,4 +1,4 @@
-#include "FrameCore.h"
+#include "Framework.h"
 
 // ImGui::Combo/ImGui::List等で使う文字列群
 const char* BoxTypeList[] = { "Simple", "Cornered" };
@@ -53,6 +53,7 @@ void CFramework::RenderMenu()
 
         ImGui::Checkbox("ESP", &g.g_ESP);
         ImGui::Checkbox("Item ESP", &g.g_ESP_Item);
+        ImGui::Checkbox("Corpse ESP", &g.g_ESP_Item);
         ImGui::Checkbox("Exfil ESP", &g.g_ESP_Exfil);
         ImGui::Checkbox("Grenade ESP", &g.g_ESP_Grenade);
 

@@ -1,9 +1,17 @@
-#include "FrameCore.h"
+#include "Framework.h"
+
+bool InScreen(const Vector2& vIn)
+{
+    if (vIn.x < g.GameRect.left || vIn.x > g.GameRect.right || vIn.y < g.GameRect.top || vIn.y > g.GameRect.bottom)
+        return false;
+
+    return true;
+}
 
 void CFramework::RenderInfo()
 {
     // ウォーターマーク
-    std::string InfoText = "Tarkov PvE | " + std::to_string((int)ImGui::GetIO().Framerate) + "FPS";
+    std::string InfoText{ "Tarkov PvE | " + std::to_string((int)ImGui::GetIO().Framerate) + "FPS" };
     StringEx(ImVec2(8.f, 8.f), ImColor(1.f, 1.f, 1.f, 1.f), ImGui::GetFontSize(), InfoText.c_str());
 
     // Crosshair
@@ -50,6 +58,9 @@ void CFramework::RenderESP()
         // WorldToScreen
         Vector2 pScreen{}, pHead{}, pNeck{};;
         if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), pEntity->m_vecOrigin, pScreen))
+            continue;
+
+        if (!InScreen(pScreen))
             continue;
 
         // WorldToScreen
@@ -114,33 +125,36 @@ void CFramework::RenderESP()
             }
         }
 
-        // Skeleton - 上のUpdate()で必要なBoneを全て読み取りここで再構築を行う。少し複雑。
-        if (g.g_ESP_Skeleton && 250.f > flDistance) // パフォーマンスの都合上250m以上先のプレイヤーはスキップ
+        // パフォーマンスの都合上250m以上先のプレイヤーはスキップ
+        if (g.g_ESP_Skeleton && 250.f > flDistance)
         {
-            // BoneList
-            Vector3 list[][2] = { 
-                { pEntity->m_vecNeckOrigin, pEntity->m_pVecBoneList[CPelvis] }, 
-                { pEntity->m_vecNeckOrigin, pEntity->m_pVecBoneList[CLeftForearm] },
-                { pEntity->m_pVecBoneList[CLeftForearm], pEntity->m_pVecBoneList[CLeftPalm] },
-                { pEntity->m_vecNeckOrigin, pEntity->m_pVecBoneList[CRightForearm] },
-                { pEntity->m_pVecBoneList[CRightForearm], pEntity->m_pVecBoneList[CRightPalm] },
-                { pEntity->m_pVecBoneList[CPelvis], pEntity->m_pVecBoneList[CLeftThigh] },
-                { pEntity->m_pVecBoneList[CLeftThigh], pEntity->m_pVecBoneList[CLeftFoot] },
-                { pEntity->m_pVecBoneList[CPelvis], pEntity->m_pVecBoneList[CRightThigh] },
-                { pEntity->m_pVecBoneList[CRightThigh], pEntity->m_pVecBoneList[CRightFoot] }
-            };
-
-            // Body
-            for (int j = 0; j < 9; j++) {
-                Vector2 bOut1{}, bOut2{};
-                if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), list[j][0], bOut1) || !WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), list[j][1], bOut2))
-                    break;
-
-                DrawLine(ImVec2(bOut1.x, bOut1.y), ImVec2(bOut2.x, bOut2.y), pColor, 1.f);
-            }
-
             // Head Circle
             ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(pHead.x, pHead.y - (HeadToNeck / 2.f)), HeadToNeck * 1.55f, pColor, 0.f);
+
+            if (pEntity->m_vecBoneList.size() != 0)
+            {
+                // BoneList
+                Vector3 list[][2]{
+                        { pEntity->m_vecNeckOrigin, pEntity->m_vecBoneList[CPelvis] },
+                { pEntity->m_vecNeckOrigin, pEntity->m_vecBoneList[CLeftForearm] },
+                { pEntity->m_vecBoneList[CLeftForearm], pEntity->m_vecBoneList[CLeftPalm] },
+                { pEntity->m_vecNeckOrigin, pEntity->m_vecBoneList[CRightForearm] },
+                { pEntity->m_vecBoneList[CRightForearm], pEntity->m_vecBoneList[CRightPalm] },
+                { pEntity->m_vecBoneList[CPelvis], pEntity->m_vecBoneList[CLeftThigh] },
+                { pEntity->m_vecBoneList[CLeftThigh], pEntity->m_vecBoneList[CLeftFoot] },
+                { pEntity->m_vecBoneList[CPelvis], pEntity->m_vecBoneList[CRightThigh] },
+                { pEntity->m_vecBoneList[CRightThigh], pEntity->m_vecBoneList[CRightFoot] }
+                };
+
+                // Body
+                for (int j = 0; j < 9; j++) {
+                    Vector2 bOut1{}, bOut2{};
+                    if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), list[j][0], bOut1) || !WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), list[j][1], bOut2))
+                        break;
+
+                    DrawLine(ImVec2(bOut1.x, bOut1.y), ImVec2(bOut2.x, bOut2.y), pColor, 1.f);
+                }
+            }
         }
 
         // Distance
@@ -156,7 +170,7 @@ void CFramework::RenderESP()
         }
         
         // Name
-        if (g.g_ESP_Name && pEntity->m_iSpawnType != SCAV && pEntity->m_iSpawnType != SNIPER_SCAV && pEntity->m_iSpawnType != NORMAL_SCAV)
+        if (g.g_ESP_Name && pEntity->m_iSpawnType != SIDE_SCAV && pEntity->m_iSpawnType != SNIPER_SCAV && pEntity->m_iSpawnType != NORMAL_SCAV)
         {
             // 不明なSpawnTypeだったら値を表示
             if (!Name.compare("InValid"))
@@ -206,6 +220,8 @@ void CFramework::RenderESP()
 
             if (!pItem->m_bIsCorpse && pItem->m_CName.empty())
                 continue;
+            else if (!g.g_ESP_Corpse && pItem->m_bIsCorpse)
+                continue;
 
             float ItemDistance = GetDistance(pLocal->m_vecOrigin, pItem->m_vecOrigin);
 
@@ -215,6 +231,9 @@ void CFramework::RenderESP()
 
             Vector2 pItemScreen{};
             if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), pItem->m_vecOrigin, pItemScreen))
+                continue;
+
+            if (!InScreen(pItemScreen))
                 continue;
 
             std::string vItemTx = pItem->m_bIsCorpse ? "Corpse" : pItem->m_CName;
@@ -237,6 +256,9 @@ void CFramework::RenderESP()
 
             Vector2 pExfilScreen{};
             if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), pExfil->m_pVecLocation, pExfilScreen))
+                continue;
+
+            if (!InScreen(pExfilScreen))
                 continue;
 
             ImColor ExfilColor = pExfil->m_pExfilStatus == NOTREADY ? Col_ESP_ExfilClose : Col_ESP_ExfilOpen;

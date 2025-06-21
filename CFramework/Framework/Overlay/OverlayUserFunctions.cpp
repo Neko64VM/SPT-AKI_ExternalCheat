@@ -1,4 +1,6 @@
 #include "Overlay.h"
+#include "../Memory/Memory.h"
+#include "../Config/Config.h"
 
 bool Overlay::InitOverlay(const std::string targetName, int InitMode)
 {

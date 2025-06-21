@@ -1,8 +1,8 @@
-#include "Cheat/FrameCore.h"
+#include "Cheat/Framework.h"
 #include "Framework/Overlay/Overlay.h"
 #pragma comment(lib, "freetype.lib")
 
-CFramework* cheat  = new CFramework;
+auto cheat = std::make_unique<CFramework>();
 
 void Overlay::OverlayUserFunction()
 {
@@ -61,7 +61,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	overlay->DestroyOverlay();
 	m.DetachProcess();
 	g.process_active = false;
-	delete cheat;
 
 	return 0;
 }

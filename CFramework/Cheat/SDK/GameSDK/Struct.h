@@ -1,5 +1,7 @@
 #pragma once
-#include "../../../Framework/Utils/Utils.h"
+#include <iostream>
+#include <SimpleMath.h>
+using namespace DirectX::SimpleMath;
 
 struct Matrix34
 {
@@ -10,9 +12,9 @@ struct Matrix34
 
 struct UnityList
 {
-	char trash[0x10]{};
-	uintptr_t list_address   = 0x10;
-	int count		= 0x18;
+	char padding[0x10]{};
+	uintptr_t list_address{ 0 }; // 0x10
+	int count{ 0 }; // 0x18
 };
 
 struct BaseObject
@@ -61,36 +63,36 @@ enum ExfilStatus : int
 
 enum PlayerSide : int
 {
-	CUSEC = 1,
-	CBEAR = 2,
-	CSCAV = 4
+	SIDE_USEC = 1,
+	SIDE_BEAR = 2,
+	SIDE_SCAV = 4
 };
 
 enum CGameBoneID : int
 {
-	Base = 0,
-	Pelvis = 14,
-	LeftThigh = 16,
-	LeftCalf = 17,
-	LeftFoot = 18,
-	LeftToe = 19,
-	RightThigh = 21,
-	RightCalf = 22,
-	RightFoot = 23,
-	RightToe = 24,
-	Spine1 = 29,
-	Spine2 = 36,
-	Spine3 = 37,
-	LeftCollarbone = 89,
-	LeftUpperarm = 90,
-	LeftForearm = 92,
-	LeftPalm = 94,
-	RightCollarbone = 110,
-	RightUpperarm = 111,
-	RightForearm = 113,
-	RightPalm = 115,
-	Neck = 132,
-	Head = 133
+	BONE_ORIGIN = 0,
+	BONE_PELVIS = 14,
+	BONE_LEFT_THIGH = 16,
+	BONE_LEFT_CALF = 17,
+	BONE_LEFT_FOOT = 18,
+	BONE_LEFT_TOE = 19,
+	BONE_RIGHT_THIGH = 21,
+	BONE_RIGHT_CALF = 22,
+	BONE_RIGHT_FOOT = 23,
+	BONE_RIGHT_TOE = 24,
+	BONE_SPINE_1 = 29,
+	BONE_SPINE_2 = 36,
+	BONE_SPINE_3 = 37,
+	BONE_LEFT_COLLARBONE = 89,
+	BONE_LEFT_UPPERARM = 90,
+	BONE_LEFT_FOREARM = 92,
+	BONE_LEFT_PALM = 94,
+	BONE_RIGHT_COLLARBONE = 110,
+	BONE_RIGHT_UPPERARM = 111,
+	BONE_RIGHT_FOREARM = 113,
+	BONE_RIGHT_PALM = 115,
+	BONE_NECK = 132,
+	BONE_HEAD = 133
 };
 
 enum SkeletonBoneID : int

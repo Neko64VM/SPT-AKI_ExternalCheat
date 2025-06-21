@@ -1,32 +1,31 @@
 #pragma once
 #include "../GameSDK/GameSDK.h"
 
-struct AllBonePointer {
+struct CBoneArray {
 	uint64_t address[150]{};
 };
 
 class CPlayer
 {
-private:
-	
 public:
-    uintptr_t address;
+	uintptr_t m_address{ 0 };
 
-	uintptr_t m_pProfile;
-	uintptr_t m_pInfo;
-	uintptr_t m_pSetting;
-	uintptr_t m_pBodyController;
+	uintptr_t m_pProfile{ 0 };
+	uintptr_t m_pInfo{ 0 };
+	uintptr_t m_pSetting{ 0 };
+	uintptr_t m_pBodyController{ 0 };
+	uintptr_t m_pWeaponAnimation{ 0 };
 
 	// データ
-	float m_fHealth;
-	float m_fHealthMax;
-	int m_iSpawnType;
-	Vector3 m_vecOrigin;
-	Vector3 m_vecHeadOrigin;
-	Vector3 m_vecNeckOrigin;
-	AllBonePointer bPointerList{};
-	std::vector<Vector3> m_pVecBoneList;
-	
+	float m_fHealth{ 0.f };
+	float m_fHealthMax{ 0.f };
+	int m_iSpawnType{ 0 };
+	Vector3 m_vecOrigin{ 0.f, 0.f, 0.f};
+	Vector3 m_vecHeadOrigin{ 0.f, 0.f, 0.f };
+	Vector3 m_vecNeckOrigin{ 0.f, 0.f, 0.f };
+	CBoneArray m_pBoneArray{};
+	std::vector<Vector3> m_vecBoneList{};
+
     // Functions
 	bool Update();
 	void UpdateStatic();
@@ -35,7 +34,5 @@ public:
 
 	bool IsAiming();
 
-	int GetSpawnType();
-	uintptr_t GetWeaponAnimation();
 	Vector3 GetBonePosition(const int BoneId);
 };

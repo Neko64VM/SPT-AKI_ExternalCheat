@@ -15,6 +15,7 @@ struct Globals
     // Visual
     bool g_ESP      = true;
     bool g_ESP_Item      = true;
+    bool g_ESP_Corpse = true;
     bool g_ESP_Exfil     = true;
     bool g_ESP_Grenade   = true;
     bool g_ESP_Line      = false;
@@ -25,7 +26,7 @@ struct Globals
     bool g_ESP_Name      = true;
     bool g_ESP_HealthBar = true;
     int  g_ESP_BoxStyle  = 1;
-    float g_ESP_MaxDistance = 750.f;
+    float g_ESP_MaxDistance = 500.f;
     float g_ESP_MaxItemDistance = 50.f;
 
     // Misc

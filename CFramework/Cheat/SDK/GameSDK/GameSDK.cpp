@@ -1,5 +1,10 @@
 #include "GameSDK.h"
 
+bool Vec2_Empty(const Vector2& value)
+{
+	return value == Vector2();
+}
+
 bool Vec3_Empty(const Vector3& value)
 {
     return value == Vector3();
@@ -126,7 +131,7 @@ uintptr_t GetObjectFromList(uintptr_t listPtr, uintptr_t lastObjectPtr, const ch
 	return 0;
 }
 
-bool EFT::InitAddress()
+bool CGame::InitAddress()
 {
 	// GameObjectManager
 	uintptr_t pGOM = m.Read<uintptr_t>(m.m_gBaseAddress + offset::dwGameObjectManager);
@@ -135,7 +140,7 @@ bool EFT::InitAddress()
 	return m_objGameObjectManager.lastActiveObject != NULL ? true : false;
 }
 
-bool EFT::Update()
+bool CGame::Update()
 {
 	// GameWorld
 	uintptr_t activeNodes = m.Read<uintptr_t>(m_objGameObjectManager.ActiveNodes);
@@ -154,7 +159,7 @@ bool EFT::Update()
 	return true;
 }
 
-bool EFT::UpdateCamera()
+bool CGame::UpdateCamera()
 {
 	Camera all_cameras = m.Read<Camera>(m.Read<uintptr_t>(m.m_gBaseAddress + offset::dwAllCamera));
 
@@ -185,15 +190,16 @@ bool EFT::UpdateCamera()
 	return false;
 }
 
-Matrix EFT::GetViewMatrix()
+bool CGame::IsInRaid()
 {
+	return m_pGameWorld != NULL && m_pLocalGameWorld != NULL;
+}
+
+Matrix CGame::GetViewMatrix()
+{
+	// ここ省略できるかチェック
 	uintptr_t dw = m.Read<uintptr_t>(m_pFpsCamera + 0x30);
 	uintptr_t viewmatrix_ptr = m.Read<uintptr_t>(dw + 0x18);
 
 	return m.Read<Matrix>(viewmatrix_ptr + 0x100);
-}
-
-uintptr_t EFT::GetLocalGameWorld()
-{
-	return this->m_pLocalGameWorld;
 }

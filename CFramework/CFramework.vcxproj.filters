@@ -19,24 +19,6 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{1b9817cd-46f9-4439-9419-78d053c3e152}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\ImGui">
-      <UniqueIdentifier>{6b85dfda-b23f-4f68-a7d7-96d16b39982a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Overlay">
-      <UniqueIdentifier>{afb86de2-e5e1-42f3-a8d7-f18ca76f4a17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Utils">
-      <UniqueIdentifier>{04b8cfc8-34d2-4204-b232-2352bc502d06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Utils\Config">
-      <UniqueIdentifier>{c82edab8-686a-41c7-96f1-7031c65e600e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Utils\Memory">
-      <UniqueIdentifier>{a54e8b14-8dc1-4d46-9721-90adf06a29c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Utils\SimpleMath">
-      <UniqueIdentifier>{cd5d489e-5761-4c40-9420-fbe3d14315d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Cheat\SDK">
       <UniqueIdentifier>{32ca098a-5183-47e8-ae19-3f1ca8e372b6}</UniqueIdentifier>
     </Filter>
@@ -52,13 +34,46 @@
     <Filter Include="Cheat\SDK\GameSDK">
       <UniqueIdentifier>{c2a6f7bc-fc36-46f5-8697-b1e2b32653ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\ImGui">
+      <UniqueIdentifier>{03bde911-4136-4211-b543-7b46323b15f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Overlay">
+      <UniqueIdentifier>{e3690d65-19d1-411a-8ab9-b939f033d9c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Memory">
+      <UniqueIdentifier>{944e7055-645c-4769-9c1d-8630d3956f2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Config">
+      <UniqueIdentifier>{bf36018a-bb1c-4f4a-af02-e08bd092f1b6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Framework\ImGui\Fonts">
-      <UniqueIdentifier>{6b62bad7-cbf3-49a1-bdd8-4792fd940e62}</UniqueIdentifier>
+      <UniqueIdentifier>{e8677ad1-3fa8-4496-a110-d90a972eb2ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\Features.cpp">
+      <Filter>Cheat</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\Menu.cpp">
+      <Filter>Cheat</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\Visual.cpp">
+      <Filter>Cheat</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\SDK\CPlayer\CPlayer.cpp">
+      <Filter>Cheat\SDK\CPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\SDK\CExfil\CExfil.cpp">
+      <Filter>Cheat\SDK\CExfil</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\SDK\GameSDK\GameSDK.cpp">
+      <Filter>Cheat\SDK\GameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\SDK\CItem\CItem.cpp">
+      <Filter>Cheat\SDK\CItem</Filter>
     </ClCompile>
     <ClCompile Include="Framework\ImGui\Custom.cpp">
       <Filter>Framework\ImGui</Filter>
@@ -70,6 +85,9 @@
       <Filter>Framework\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Framework\ImGui\imgui_draw.cpp">
+      <Filter>Framework\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\ImGui\imgui_freetype.cpp">
       <Filter>Framework\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Framework\ImGui\imgui_impl_dx11.cpp">
@@ -87,44 +105,50 @@
     <ClCompile Include="Framework\Overlay\Overlay.cpp">
       <Filter>Framework\Overlay</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Utils\Memory\Memory.cpp">
-      <Filter>Framework\Utils\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Utils\Config\Config.cpp">
-      <Filter>Framework\Utils\Config</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\Utils\Utils.cpp">
-      <Filter>Framework\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Cheat\Features.cpp">
-      <Filter>Cheat</Filter>
-    </ClCompile>
-    <ClCompile Include="Cheat\Menu.cpp">
-      <Filter>Cheat</Filter>
-    </ClCompile>
-    <ClCompile Include="Cheat\Visual.cpp">
-      <Filter>Cheat</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\Overlay\OverlayUserFunctions.cpp">
       <Filter>Framework\Overlay</Filter>
     </ClCompile>
-    <ClCompile Include="Cheat\SDK\CPlayer\CPlayer.cpp">
-      <Filter>Cheat\SDK\CPlayer</Filter>
+    <ClCompile Include="Framework\Memory\Memory.cpp">
+      <Filter>Framework\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Cheat\SDK\CExfil\CExfil.cpp">
-      <Filter>Cheat\SDK\CExfil</Filter>
+    <ClCompile Include="Framework\Config\Config.cpp">
+      <Filter>Framework\Config</Filter>
     </ClCompile>
-    <ClCompile Include="Cheat\SDK\GameSDK\GameSDK.cpp">
-      <Filter>Cheat\SDK\GameSDK</Filter>
+    <ClCompile Include="Cheat\Render.cpp">
+      <Filter>Cheat</Filter>
     </ClCompile>
-    <ClCompile Include="Cheat\SDK\CItem\CItem.cpp">
-      <Filter>Cheat\SDK\CItem</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\ImGui\imgui_freetype.cpp">
-      <Filter>Framework\ImGui</Filter>
+    <ClCompile Include="Cheat\UpdateList.cpp">
+      <Filter>Cheat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cheat\Framework.h">
+      <Filter>Cheat</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheat\SDK\CPlayer\CPlayer.h">
+      <Filter>Cheat\SDK\CPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheat\SDK\CExfil\CExfil.h">
+      <Filter>Cheat\SDK\CExfil</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheat\SDK\GameSDK\GameSDK.h">
+      <Filter>Cheat\SDK\GameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheat\SDK\GameSDK\Struct.h">
+      <Filter>Cheat\SDK\GameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheat\SDK\CItem\CItem.h">
+      <Filter>Cheat\SDK\CItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\ImGui\Fonts\fa.h">
+      <Filter>Framework\ImGui\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\ImGui\Fonts\IconsFontAwesome6.h">
+      <Filter>Framework\ImGui\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\ImGui\Fonts\RobotoRegular.h">
+      <Filter>Framework\ImGui\Fonts</Filter>
+    </ClInclude>
     <ClInclude Include="Framework\ImGui\Custom.h">
       <Filter>Framework\ImGui</Filter>
     </ClInclude>
@@ -132,6 +156,9 @@
       <Filter>Framework\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Framework\ImGui\imgui.h">
+      <Filter>Framework\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\ImGui\imgui_freetype.h">
       <Filter>Framework\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Framework\ImGui\imgui_impl_dx11.h">
@@ -155,53 +182,17 @@
     <ClInclude Include="Framework\Overlay\Overlay.h">
       <Filter>Framework\Overlay</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Utils\SimpleMath\SimpleMath.h">
-      <Filter>Framework\Utils\SimpleMath</Filter>
+    <ClInclude Include="Framework\Memory\Memory.h">
+      <Filter>Framework\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Utils\Memory\Memory.h">
-      <Filter>Framework\Utils\Memory</Filter>
+    <ClInclude Include="Framework\Config\Config.h">
+      <Filter>Framework\Config</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Utils\Config\Config.h">
-      <Filter>Framework\Utils\Config</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Utils\Utils.h">
-      <Filter>Framework\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Cheat\FrameCore.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
-    <ClInclude Include="Cheat\SDK\CPlayer\CPlayer.h">
-      <Filter>Cheat\SDK\CPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="Cheat\SDK\CExfil\CExfil.h">
-      <Filter>Cheat\SDK\CExfil</Filter>
-    </ClInclude>
-    <ClInclude Include="Cheat\SDK\GameSDK\GameSDK.h">
+    <ClInclude Include="Cheat\SDK\GameSDK\Offset.h">
       <Filter>Cheat\SDK\GameSDK</Filter>
-    </ClInclude>
-    <ClInclude Include="Cheat\SDK\GameSDK\Struct.h">
-      <Filter>Cheat\SDK\GameSDK</Filter>
-    </ClInclude>
-    <ClInclude Include="Cheat\SDK\CItem\CItem.h">
-      <Filter>Cheat\SDK\CItem</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\ImGui\imgui_freetype.h">
-      <Filter>Framework\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\ImGui\Fonts\fa.h">
-      <Filter>Framework\ImGui\Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\ImGui\Fonts\IconsFontAwesome6.h">
-      <Filter>Framework\ImGui\Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\ImGui\Fonts\RobotoRegular.h">
-      <Filter>Framework\ImGui\Fonts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Framework\Utils\SimpleMath\SimpleMath.inl">
-      <Filter>Framework\Utils\SimpleMath</Filter>
-    </None>
     <None Include="..\.gitignore" />
     <None Include="..\LICENSE" />
     <None Include="..\README.md" />
