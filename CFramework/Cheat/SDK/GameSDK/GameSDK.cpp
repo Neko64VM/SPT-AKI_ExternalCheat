@@ -129,35 +129,34 @@ uintptr_t GetObjectFromList(uintptr_t listPtr, uintptr_t lastObjectPtr, const ch
 bool EFT::InitAddress()
 {
 	// GameObjectManager
-	uintptr_t GomPtr = m.Read<uintptr_t>(m.m_gBaseAddress + offset::GameObjectManager);
-	m_GOM = m.Read<GameObjectManager>(GomPtr);
+	uintptr_t pGOM = m.Read<uintptr_t>(m.m_gBaseAddress + offset::dwGameObjectManager);
+	m_objGameObjectManager = m.Read<GameObjectManager>(pGOM);
 
-	// GameWorld
-	uintptr_t activeNodes = m.Read<uintptr_t>(m_GOM.ActiveNodes);
-	uintptr_t lastActiveNode = m.Read<uintptr_t>(m_GOM.LastActiveNode);
-	m_gameWorld = GetObjectFromList(activeNodes, lastActiveNode, "GameWorld");
-
-	return m_gameWorld == 0 ? false : true;
+	return m_objGameObjectManager.lastActiveObject != NULL ? true : false;
 }
 
 bool EFT::Update()
 {
-	// LocalGameWorld
-	m_localGameWorld = m.ReadChain(m_gameWorld, { 0x30, 0x18, 0x28 });
+	// GameWorld
+	uintptr_t activeNodes = m.Read<uintptr_t>(m_objGameObjectManager.ActiveNodes);
+	uintptr_t lastActiveNode = m.Read<uintptr_t>(m_objGameObjectManager.LastActiveNode);
+	m_pGameWorld = GetObjectFromList(activeNodes, lastActiveNode, "GameWorld");
 
-	if (m_localGameWorld == 0) {
-		if (!InitAddress()) {
-			std::this_thread::sleep_for(std::chrono::seconds(3));
-			return false;
-		}
-	}
+	if (!m_pGameWorld)
+		return false;
+
+	// LocalGameWorld
+	m_pLocalGameWorld = m.ReadChain(m_pGameWorld, { 0x30, 0x18, 0x28 });
+
+	if (!m_pLocalGameWorld)
+		return false;
 
 	return true;
 }
 
 bool EFT::UpdateCamera()
 {
-	Camera all_cameras = m.Read<Camera>(m.Read<uintptr_t>(m.m_gBaseAddress + offset::Tarkov_Camera));
+	Camera all_cameras = m.Read<Camera>(m.Read<uintptr_t>(m.m_gBaseAddress + offset::dwAllCamera));
 
 	if (all_cameras.count == 0)
 		return false;
@@ -177,7 +176,7 @@ bool EFT::UpdateCamera()
 			m.ReadString(camera_name_ptr, name, sizeof(name));
 
 			if (strcmp(name, "FPS Camera") == 0) {
-				m_fpsCamera = camera_obj;
+				m_pFpsCamera = camera_obj;
 				return true;
 			}
 		}
@@ -188,13 +187,13 @@ bool EFT::UpdateCamera()
 
 Matrix EFT::GetViewMatrix()
 {
-	uintptr_t dw = m.Read<uintptr_t>(m_fpsCamera + 0x30);
+	uintptr_t dw = m.Read<uintptr_t>(m_pFpsCamera + 0x30);
 	uintptr_t viewmatrix_ptr = m.Read<uintptr_t>(dw + 0x18);
 
-	return m.Read<Matrix>(viewmatrix_ptr + 0xDC);
+	return m.Read<Matrix>(viewmatrix_ptr + 0x100);
 }
 
 uintptr_t EFT::GetLocalGameWorld()
 {
-	return this->m_localGameWorld;
+	return this->m_pLocalGameWorld;
 }

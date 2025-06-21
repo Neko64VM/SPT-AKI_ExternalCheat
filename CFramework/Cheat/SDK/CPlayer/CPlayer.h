@@ -21,14 +21,13 @@ public:
 	float m_fHealth;
 	float m_fHealthMax;
 	int m_iSpawnType;
-	Vector3 m_vecLocation;
-	Vector3 m_vecHeadLocation;
-	Vector3 m_vecNeckLocation;
+	Vector3 m_vecOrigin;
+	Vector3 m_vecHeadOrigin;
+	Vector3 m_vecNeckOrigin;
 	AllBonePointer bPointerList{};
 	std::vector<Vector3> m_pVecBoneList;
 	
     // Functions
-	bool GetAddress(uintptr_t& ptr);
 	bool Update();
 	void UpdateStatic();
 	void UpdateBone();

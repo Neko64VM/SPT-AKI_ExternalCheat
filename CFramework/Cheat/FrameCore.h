@@ -9,6 +9,7 @@
 #include "../Framework/ImGui/Fonts/fa.h"
 #include "../Framework/ImGui/Fonts/RobotoRegular.h"
 #include "../Framework/ImGui/Fonts/IconsFontAwesome6.h"
+#include <mutex>
 
 class CFramework
 {
@@ -25,10 +26,28 @@ public:
 private:
     EFT* tarkov = new EFT();
     CPlayer local, *pLocal = &local;
-    std::vector<CPlayer> EntityList;
-    std::vector<CExfil> ExfilList;
-    std::vector<CItem> ItemList;
-    std::vector<uintptr_t> GrenadeList;
+
+    std::mutex m_mtxEntityList;
+    std::mutex m_mtxExfilList;
+    std::mutex m_mtxItemList;
+
+    std::vector<CPlayer> m_vecEntityList;
+    std::vector<CExfil> m_vecExfilList;
+    std::vector<CItem> m_vecItemList;
+    std::vector<uintptr_t> m_vecGrenadeList;
+
+    std::vector<CPlayer> GetEntityList() {
+        std::lock_guard<std::mutex> lock(m_mtxEntityList);
+        return m_vecEntityList;
+    }
+    std::vector<CExfil> GetExfilList() {
+        std::lock_guard<std::mutex> lock(m_mtxExfilList);
+        return m_vecExfilList;
+    }
+    std::vector<CItem> GetItemList() {
+        std::lock_guard<std::mutex> lock(m_mtxItemList);
+        return m_vecItemList;
+    }
 
     // Colors
     ImColor Col_ESP_PMC = { 1.f, 0.f, 0.85f, 1.f };
@@ -42,6 +61,7 @@ private:
     ImColor Col_ESP_ExfilOpen = { 0.f, 1.f, 0.f, 0.5f };
     ImColor Col_ESP_ExfilClose = { 1.f, 0.3f, 0.f, 0.5f };
 
+    ImColor Col_ESP_Corpse = { 1.f, 1.f, 1.f, 0.9f };
     ImColor Col_ESP_RareItem = { 1.f, 0.f, 0.f, 0.9f };
 
     ImColor CrosshairColor = { 0.f, 1.f, 0.f, 1.f };

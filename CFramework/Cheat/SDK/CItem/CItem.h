@@ -8,9 +8,10 @@ private:
 public:
     uintptr_t address;
 
-	int m_iPrice;
-	std::string m_CName;
-	Vector3 m_vecLocation;
+	bool m_bIsCorpse{ false };
+	int m_iMarketPrice{ 0 };
+	std::string m_CName{};
+	Vector3 m_vecOrigin{};
 
 	bool GetAddress(uintptr_t& ptr);
 	bool Update();

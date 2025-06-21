@@ -8,13 +8,13 @@ bool CExfil::GetAddress(uintptr_t& address)
 
 int CExfil::GetStatus()
 {
-	return m.Read<int>(ptr + 0xC0);
+	return m.Read<int>(ptr + 0xC8);
 }
 
 std::string CExfil::GetName()
 {
 	// Name
-	uintptr_t eSetting = m.Read<uintptr_t>(ptr + 0x70);
+	uintptr_t eSetting = m.Read<uintptr_t>(ptr + 0x78);
 	uintptr_t NamePtr = m.Read<uintptr_t>(eSetting + 0x18);
 
 	if (!NamePtr)

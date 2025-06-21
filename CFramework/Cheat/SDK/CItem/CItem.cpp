@@ -63,18 +63,19 @@ bool CItem::Update()
 {
 	// Position
 	uintptr_t TransformInternal = m.ReadChain(address, { 0x10, 0x30, 0x30, 0x8, 0x28, 0x10 });
-	m_vecLocation = GetTransformPosition(TransformInternal);
+	m_vecOrigin = GetTransformPosition(TransformInternal);
 
-	if (Vec3_Empty(m_vecLocation))
+	if (Vec3_Empty(m_vecOrigin))
 		return false;
 	
 	// ClassName
 	uintptr_t nameAddr = m.ReadChain(address, { 0x0, 0x0, 0x48 });
 	std::string className = m.ReadString(nameAddr, 64);
-	
+
 	// ƒRƒ“ƒeƒi/Ž€‘Ì‚Å‚Í‚È‚©‚Á‚½‚ç
 	if (className.compare("ObservedCorpse") && className.compare("Corpse"))
 	{
+		/*
 		// ID
 		char ItemID[64]{};
 		uintptr_t BsgId = m.ReadChain(address, { 0x10, 0x28, 0xB0, 0x40, 0x50 });
@@ -88,8 +89,6 @@ bool CItem::Update()
 		// FUCKING SIMPLE EXAMPLE
 		std::string temp = ItemID;
 
-		std::cout << ItemID << std::endl;
-
 		if (!temp.empty())
 		{
 			for (auto& list_index : C_LootList)
@@ -101,6 +100,11 @@ bool CItem::Update()
 				}
 			}
 		}
+		*/
+	}
+	else
+	{
+		m_bIsCorpse = true;
 	}
 
 	return true;

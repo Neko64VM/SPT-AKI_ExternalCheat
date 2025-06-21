@@ -16,7 +16,7 @@ void CFramework::MiscAll()
 
     // BasePointer
     uintptr_t WeaponAnimation = pLocal->GetWeaponAnimation();
-    uintptr_t Physics = m.Read<uintptr_t>(LocalAddr + offset::Physics);
+    uintptr_t Physics = m.Read<uintptr_t>(LocalAddr + offset::Player::pPhysics);
 
     uintptr_t BreathEffector = m.Read<uintptr_t>(WeaponAnimation + 0x28);
     uintptr_t Stamina = m.Read<uintptr_t>(Physics + 0x38);
@@ -38,16 +38,28 @@ void CFramework::MiscAll()
 
 void CFramework::UpdateList()
 {
-    // 仮のリスト用変数
-    std::vector<CPlayer>    list_player{};
-    std::vector<uintptr_t>  list_grenade{};
+    // Get GameObjectManager
+    while (!tarkov->InitAddress() || !tarkov->UpdateCamera())
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
+    // Loop
     while (g.process_active)
     {
-        if (g.g_ESP && tarkov->Update())
+        // Sleep...
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        
+        // 仮のリスト用変数
+        std::vector<CPlayer>    list_player{};
+        std::vector<uintptr_t>  list_grenade{};
+
+        if (g.g_ESP)
         {
+            // not In raid
+            if (!tarkov->Update())
+                continue;
+
             // PlayerList
-            const auto GameWorld = tarkov->GetLocalGameWorld();
+            const auto GameWorld = tarkov->m_pLocalGameWorld;
             const auto registered_player = m.Read<uintptr_t>(GameWorld + offset::RegisteredPlayers);
             const auto entity_array = m.Read<UnityList>(registered_player);
 
@@ -56,28 +68,28 @@ void CFramework::UpdateList()
             else if (entity_array.list_address == NULL)
                 continue;
 
-            auto local_addr = m.Read<uintptr_t>(GameWorld + offset::MainPlayer);
+            pLocal->address = m.Read<uintptr_t>(GameWorld + offset::MainPlayer);
 
-            if (pLocal->GetAddress(local_addr) && pLocal->Update())
+            if (pLocal->address != NULL)
             {
                 pLocal->UpdateStatic();
+                pLocal->Update();
+
                 auto player_list = m.Read<CGameObjectList>(entity_array.list_address + 0x20);
 
                 // ESP用EntityListを構築
                 for (auto i = 0; i < entity_array.count; i++)
                 {
-                    CPlayer p;
-                    if (p.GetAddress(player_list.address[i]) && player_list.address[i] != local_addr) // pointer is valid
-                    {
-                        // ここで距離のチェックとかしときたい
-                        if (!Vec3_Empty(pLocal->m_vecLocation))
-                            pLocal->Update();
+                    CPlayer p = CPlayer();
+                    p.address = player_list.address[i];
 
-                        float dist = GetDistance(pLocal->m_vecLocation, p.GetBonePosition(Base));
+                    if (p.address != NULL && p.address != local.address) 
+                    {
+                        p.UpdateStatic();
 
                         // Distance check
-                        if (dist < g.g_ESP_MaxDistance) {
-                            p.UpdateStatic();
+                        if (GetDistance(pLocal->m_vecOrigin, p.GetBonePosition(Base)) < g.g_ESP_MaxDistance)
+                        {
                             p.m_iSpawnType = p.GetSpawnType();
 
                             list_player.push_back(p);
@@ -111,12 +123,10 @@ void CFramework::UpdateList()
             continue;
         }
 
-        EntityList = list_player;
-        GrenadeList = list_grenade;
-        list_player.clear();
-        list_grenade.clear();
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::lock_guard<std::mutex> lock0(m_mtxEntityList);
+        m_vecEntityList = list_player;
+        
+        //GrenadeList = list_grenade;
     }
 }
 
@@ -125,9 +135,12 @@ void CFramework::UpdateStaticList() // C6262 :(
 {
     while (g.process_active)
     {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+
         std::vector<CItem>  list_item{};
-        std::vector<CExfil>     list_exfil{};
+        std::vector<CExfil> list_exfil{};
         const auto GameWorld = tarkov->GetLocalGameWorld();
+        tarkov->UpdateCamera();
 
         // ItemList
         if (tarkov->Update())
@@ -136,10 +149,10 @@ void CFramework::UpdateStaticList() // C6262 :(
             if (g.g_ESP_Exfil)
             {
                 const auto exfil_controller = m.Read<uintptr_t>(GameWorld + offset::ExfilController);
-                const auto exfil_array = m.Read<uintptr_t>(exfil_controller + 0x20);
+                const auto exfil_array = m.Read<uintptr_t>(exfil_controller + 0x28);
                 auto exfil_list = m.Read<CGameObjectList>(exfil_array + 0x20);
 
-                for (auto j = 0; j < 24; j++)
+                for (auto j = 0; j < 16; j++)
                 {
                     CExfil e;
                     if (e.GetAddress(exfil_list.address[j]))
@@ -180,12 +193,10 @@ void CFramework::UpdateStaticList() // C6262 :(
             continue;
         }
 
-        ItemList = list_item;
-        ExfilList = list_exfil;
-        list_exfil.clear();
-        list_item.clear();
-
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::lock_guard<std::mutex> lock1(m_mtxExfilList);
+        std::lock_guard<std::mutex> lock2(m_mtxItemList);
+        m_vecExfilList = list_exfil;
+        m_vecItemList = list_item;
     }
 }
 
