@@ -13,7 +13,6 @@ SPT-AKI 3.11.3 向けの外部チートです。チート開発に対する興�
 ## 備考
 * CPU使用率が非常に高いです。全体的な改善が必要ですがめんどくさいです。
 
-
 ## 実行
 必要なライブラリは全て揃っているので、VisualStudioでビルドすれば普通に動くはずです。  
 https://learn.microsoft.com/ja-jp/cpp/build/vscpp-step-0-installation?view=msvc-170
