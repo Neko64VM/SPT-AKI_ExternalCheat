@@ -1,57 +1,19 @@
 #include "CItem.h"
+#include <algorithm>
+#include <optional>
+#include "ItemList.h"
 
-// Example
-struct C_EFT_ItemData
-{
-	int item_price;
-	std::string item_name;
-	std::string item_id;
-};
+// Thank you ChatGPT!
+std::optional<tarkovItem> findDataById(const std::vector<tarkovItem>& list, const std::string& targetId) {
+	auto it = std::find_if(list.begin(), list.end(), [&](const tarkovItem& d) {
+		return d.id.find(targetId) != std::string::npos;
+		});
 
-// std::map
-std::vector<C_EFT_ItemData>C_LootList = 
-{
-	{
-		2500000,
-		"Red Rebel",
-		"5c0126f40db834002a125382"
-	},
-	{
-		20000000,
-		"Labs keycard (Red)",
-		"5c1d0efb86f7744baf2e7b7b"
-	},
-	{
-		20000000,
-		" Labs keycard (Blue)",
-		"1d0c5f86f7744bb2683cf0"
-	},
-	{
-		20000000,
-		"Labs keycard (Green)",
-		"1d0dc586f7744baf2e7b79"
-	},
-	{
-		20000000,
-		"Labs keycard (Vioret)",
-		"1e495a86f7743109743dfb"
-	},
-	{
-		20000000,
-		"Labs keycard (Black)",
-		"1d0f4986f7744bb01837fa"
-	},
-	{
-		20000000,
-		"Labs keycard (Yellow)",
-		"1d0d6d86f7744bb2683e1f"
-	},
-	{
-		65000,
-		"0.2 BTC",
-		"faff1d86f7746c51718c9c"
-	}
-};
+	if (it != list.end())
+		return *it;
+	else
+		return std::nullopt;
+}
 
 bool CItem::GetAddress(uintptr_t& ptr)
 {
@@ -76,31 +38,32 @@ bool CItem::Update()
 	if (className.compare("ObservedCorpse") && className.compare("Corpse"))
 	{
 		/*
+		uintptr_t ItemTemplate = m.Read<uintptr_t>(address + 0x40);
+		uintptr_t nameAddr = m.Read<uintptr_t>(ItemTemplate + 0x28);
+		auto dwadwad = m.ReadString(nameAddr, 128);
+		*/
+
 		// ID
 		char ItemID[64]{};
-		uintptr_t BsgId = m.ReadChain(address, { 0x10, 0x28, 0xB0, 0x40, 0x50 });
+		uintptr_t BsgId = m.ReadChain(address, { 0x10, 0x28, 0xB8, 0x40, 0x60 });
 
-		// —v‰ü‘P
 		const int length = m.Read<int>(BsgId + 0x10);
 
-		for (int j = 0; j < length; j++)
-			ItemID[j] = m.Read<char>(BsgId + 0x18 + (j * 0x2));
-
-		// FUCKING SIMPLE EXAMPLE
-		std::string temp = ItemID;
-
-		if (!temp.empty())
+		if (length > 0)
 		{
-			for (auto& list_index : C_LootList)
+			for (int j = 0; j < length; j++)
+				ItemID[j] = m.Read<char>(BsgId + 0x18 + (j * 0x2));
+
+			auto result = findDataById(itemList, ItemID);
+			if (result)
 			{
-				if (list_index.item_id.find(temp) != std::string::npos)
+				if (result->price > g.g_ESP_ItemPrice)
 				{
-					m_iPrice = list_index.item_price;
-					m_CName = list_index.item_name;
+					m_iMarketPrice = result->price;
+					m_szItemName = result->name;
 				}
 			}
 		}
-		*/
 	}
 	else
 	{

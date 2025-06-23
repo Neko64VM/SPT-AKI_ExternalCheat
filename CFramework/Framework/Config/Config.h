@@ -26,6 +26,7 @@ struct Globals
     bool g_ESP_Name      = true;
     bool g_ESP_HealthBar = true;
     int  g_ESP_BoxStyle  = 1;
+    int g_ESP_ItemPrice = 25000;
     float g_ESP_MaxDistance = 500.f;
     float g_ESP_MaxItemDistance = 50.f;
 

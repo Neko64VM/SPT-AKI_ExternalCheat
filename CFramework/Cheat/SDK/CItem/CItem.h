@@ -10,7 +10,7 @@ public:
 
 	bool m_bIsCorpse{ false };
 	int m_iMarketPrice{ 0 };
-	std::string m_CName{};
+	std::string m_szItemName{};
 	Vector3 m_vecOrigin{};
 
 	bool GetAddress(uintptr_t& ptr);

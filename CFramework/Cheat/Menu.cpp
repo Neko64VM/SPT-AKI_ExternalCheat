@@ -1,15 +1,17 @@
 #include "Framework.h"
 
 // ImGui::Combo/ImGui::List等で使う文字列群
-const char* BoxTypeList[] = { "Simple", "Cornered" };
-const char* CrosshairList[] = { "Cross", "Circle" };
-std::vector<const char*> MenuStringList = { "AimBot", "Visual", "Misc", "Setting" };
-std::vector<const char*> MenuIconList = { ICON_FA_CROSSHAIRS, ICON_FA_EYE, ICON_FA_BARS, ICON_FA_GEAR };
+const char* BoxTypeList[]{ "Simple", "Cornered" };
+const char* CrosshairList[]{ "Cross", "Circle" };
+std::vector<const char*> MenuStringList{ "Visual", "Misc", "Setting" };
+std::vector<const char*> MenuIconList{  ICON_FA_EYE, ICON_FA_BARS, ICON_FA_GEAR };
 
 void CFramework::RenderMenu()
 {
     // Setup
     static int Index = 0;
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImVec4* colors = style.Colors;
 
     ImGui::SetNextWindowBgAlpha(0.975f);
     ImGui::SetNextWindowSize(ImVec2(725.f, 450.f));
@@ -18,7 +20,7 @@ void CFramework::RenderMenu()
     //---// Clild 0 //-----------------------------------//
     ImGui::BeginChild("##SelectChild", ImVec2(150.f, ImGui::GetContentRegionAvail().y), false);
 
-    ImGui::NewLine();
+    ImGui::SetCursorPosY(25.f);
 
     ImGui::PushFont(icon);
 
@@ -35,17 +37,16 @@ void CFramework::RenderMenu()
     ImGui::SameLine();
 
     //---// Clild 1 //-----------------------------------//
-    ImGui::BeginChild("##ContextChild", ImVec2(ImGui::GetContentRegionAvail()), false);
+    ImGui::BeginChild("##MainChild", ImVec2(ImGui::GetContentRegionAvail()), false);
 
     //---// Left //--------------------------------------//
-    ImGui::BeginChild("##LeftChild", ImVec2(ImGui::GetContentRegionAvail().x / 2.f - 16.f, ImGui::GetContentRegionAvail().y), false);
-
+    ImGui::BeginChild("##LeftChild", ImVec2(ImGui::GetContentRegionAvail().x / 2.f - (style.WindowPadding.x * 2), ImGui::GetContentRegionAvail().y), false);
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.f));
 
     switch (Index)
     {
     case 0: // Visual
-        ImGui::BeginChild("##C000", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 3.f), true);
+        ImGui::BeginChild("##C000", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 2.5f), true);
 
         ImGui::Text("Visual");
         ImGui::Separator();
@@ -54,7 +55,7 @@ void CFramework::RenderMenu()
         ImGui::Checkbox("ESP", &g.g_ESP);
         ImGui::Checkbox("Item ESP", &g.g_ESP_Item);
         ImGui::Checkbox("Corpse ESP", &g.g_ESP_Item);
-        ImGui::Checkbox("Exfil ESP", &g.g_ESP_Exfil);
+        ImGui::Checkbox("Extract ESP", &g.g_ESP_Exfil); // exfiltrate
         ImGui::Checkbox("Grenade ESP", &g.g_ESP_Grenade);
 
         ImGui::EndChild();
@@ -131,7 +132,7 @@ void CFramework::RenderMenu()
     switch (Index)
     {
     case 0: // Visual
-        ImGui::BeginChild("##C100", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 2.5f), true);
+        ImGui::BeginChild("##C100", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 2.f), true);
 
         ImGui::Text("ESP Setting");
         ImGui::Separator();
@@ -139,6 +140,8 @@ void CFramework::RenderMenu()
 
         ImGui::CustomSliderFloat("Player", "##Dist", &g.g_ESP_MaxDistance, 100.f, 2000.f);
         ImGui::CustomSliderFloat("Item", "##ItemDist", &g.g_ESP_MaxItemDistance, 10.f, 1000.f);
+
+        ImGui::CustomSliderInt("MinPrice", "##ItemPrice", &g.g_ESP_ItemPrice, 1000, 100000);
 
         ImGui::Spacing();
         ImGui::Spacing();
@@ -166,12 +169,13 @@ void CFramework::RenderMenu()
         if (ImGui::TreeNode("Game"))
         {
             ImGui::Text("[+] Item");
+            ImGui::ColorEdit4("Corpse", &Col_ESP_Corpse.Value.x);
             ImGui::ColorEdit4("Rare", &Col_ESP_RareItem.Value.x);
             
             ImGui::NewLine();
             ImGui::Spacing();
 
-            ImGui::Text("[+] Exfil");
+            ImGui::Text("[+] Extract");
             ImGui::ColorEdit4("Open", &Col_ESP_ExfilOpen.Value.x);
             ImGui::ColorEdit4("Close", &Col_ESP_ExfilClose.Value.x);
 
