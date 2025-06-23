@@ -183,32 +183,46 @@ void CFramework::RenderESP()
     // Grenade
     if (g.g_ESP_Grenade)
     {
-        /*
-        for (auto& grenade : GrenadeList)
+        // GrenadeList
+        if (g.g_ESP_Grenade)
         {
-            uintptr_t TransformInternal = m.ReadChain(grenade, { 0x10, 0x30, 0x30, 0x8, 0x28, 0x10 });
-            Vector3 m_pVecLocation = GetTransformPosition(TransformInternal);
+            const auto grenade_class = m.Read<uintptr_t>(tarkov->m_pLocalGameWorld + offset::GrenadeList);
+            const auto grenade_array_ptr = m.Read<uintptr_t>(grenade_class + 0x18);
+            const auto grenade_array = m.Read<UnityList>(grenade_array_ptr);
 
-            if (Vec3_Empty(m_pVecLocation))
-                continue;
+            if (grenade_array.count > 0)
+            {
+                for (auto k = 0; k < grenade_array.count; k++)
+                {
+                    auto grenade = m.Read<uintptr_t>(grenade_array.list_address + 0x20 + (0x8 * k));
+                
+                    if (grenade != NULL)
+                    {
+                        uintptr_t TransformInternal = m.ReadChain(grenade, { 0x10, 0x30, 0x30, 0x8, 0x28, 0x10 });
+                        Vector3 m_pVecLocation = GetTransformPosition(TransformInternal);
 
-            float gDistance = GetDistance(pLocal->m_vecOrigin, m_pVecLocation);
+                        if (Vec3_Empty(m_pVecLocation))
+                            continue;
 
-            if (gDistance > 100.f)
-                continue;
-            else if (gDistance < 10.f)
-                String(ImVec2(g.GameRect.right / 2.f - (ImGui::CalcTextSize("[ WARNING ] Grenade!!").x / 2.f), g.GameRect.bottom / 2.f), ImColor(1.f, 0.f, 0.f, 1.f), "[ WARNING ] Grenade!!");
+                        float gDistance = GetDistance(pLocal->m_vecOrigin, m_pVecLocation);
+
+                        if (gDistance > 100.f)
+                            continue;
+                        else if (gDistance < 10.f)
+                            String(ImVec2(g.GameRect.right / 2.f - (ImGui::CalcTextSize("[ WARNING ] Grenade!!").x / 2.f), g.GameRect.bottom / 2.f), ImColor(1.f, 0.f, 0.f, 1.f), "[ WARNING ] Grenade!!");
 
 
-            Vector2 pGrenadeRoot{};
-            if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), m_pVecLocation, pGrenadeRoot))
-                continue;
+                        Vector2 pGrenadeRoot{};
+                        if (!WorldToScreen(ViewMatrix, Vector2(g.GameRect.right, g.GameRect.bottom), m_pVecLocation, pGrenadeRoot))
+                            continue;
 
-            std::string gre_tx = "Grenade [" + std::to_string(int(gDistance)) + "m]";
-            ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(pGrenadeRoot.x, pGrenadeRoot.y), 2.f, ImColor(1.f, 0.f, 0.f, 1.f), 0.f);
-            String(ImVec2(pGrenadeRoot.x - (ImGui::CalcTextSize(gre_tx.c_str()).x / 2.f), pGrenadeRoot.y - 13.f), ImColor(1.f, 0.f, 0.f, 1.f), gre_tx.c_str());
+                        std::string gre_tx = "Grenade [" + std::to_string(int(gDistance)) + "m]";
+                        ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(pGrenadeRoot.x, pGrenadeRoot.y), 2.f, ImColor(1.f, 0.f, 0.f, 1.f), 0.f);
+                        String(ImVec2(pGrenadeRoot.x - (ImGui::CalcTextSize(gre_tx.c_str()).x / 2.f), pGrenadeRoot.y - 13.f), ImColor(1.f, 0.f, 0.f, 1.f), gre_tx.c_str());
+                    }
+                }
+            }
         }
-        */
     }
 
     // Item
@@ -218,7 +232,7 @@ void CFramework::RenderESP()
         {
             CItem* pItem = &item;
 
-            if (!pItem->m_bIsCorpse && pItem->m_CName.empty())
+            if (!pItem->m_bIsCorpse && pItem->m_szItemName.empty())
                 continue;
             else if (!g.g_ESP_Corpse && pItem->m_bIsCorpse)
                 continue;
@@ -236,7 +250,7 @@ void CFramework::RenderESP()
             if (!InScreen(pItemScreen))
                 continue;
 
-            std::string vItemTx = pItem->m_bIsCorpse ? "Corpse" : pItem->m_CName;
+            std::string vItemTx = pItem->m_bIsCorpse ? "Corpse" : pItem->m_szItemName;
             vItemTx +="[" + std::to_string((int)ItemDistance) + "m]";
 
             ImColor itemCol = pItem->m_bIsCorpse ? Col_ESP_Corpse : Col_ESP_RareItem;

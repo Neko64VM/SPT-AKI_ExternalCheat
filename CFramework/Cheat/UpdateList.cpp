@@ -68,26 +68,6 @@ void CFramework::UpdateList()
                         }
                     }
                 }
-
-                // GrenadeList
-                if (g.g_ESP_Grenade)
-                {
-                    const auto grenade_class = m.Read<uintptr_t>(GameWorld + offset::GrenadeList);
-                    const auto grenade_array_ptr = m.Read<uintptr_t>(grenade_class + 0x18);
-                    const auto grenade_array = m.Read<UnityList>(grenade_array_ptr);
-
-                    if (grenade_array.count > 0)
-                    {
-                        auto grenade_list = m.Read<CGameObjectList>(grenade_array.list_address + 0x20);
-
-                        for (auto g = 0; g < grenade_array.count; g++)
-                        {
-                            if (grenade_list.address[g] != NULL) {
-                                list_grenade.push_back(grenade_list.address[g]);
-                            }  
-                        }
-                    }
-                }
             }
         } 
         else {

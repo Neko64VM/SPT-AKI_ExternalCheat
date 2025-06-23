@@ -14,8 +14,8 @@
 class CFramework
 {
 public:
-    ImFont* icon{ nullptr };
-
+    
+    bool Init();
     void UpdateList();
     void UpdateStaticList();
 	void RenderInfo();
@@ -23,7 +23,12 @@ public:
 	void RenderESP();
     void MiscAll();
 private:
+    ImFont* icon{ nullptr };
+
+    // どうにかする
     CGame* tarkov = new CGame();
+    
+    // スレッドセーフにする
     CPlayer local;
 
     std::mutex m_mtxEntityList;
