@@ -31,7 +31,7 @@ void CFramework::GetESPInfo(const int& SpawnType, std::string& vOutStr, ImColor&
     switch (SpawnType)
     {
     case SCAV:
-        vOutStr = "Scav";
+        vOutStr = "";
         vOutColor = Col_ESP_Scav;
         break;
     case SNIPER_SCAV:
