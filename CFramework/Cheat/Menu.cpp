@@ -54,7 +54,7 @@ void CFramework::RenderMenu()
 
         ImGui::Checkbox("ESP", &g.g_ESP);
         ImGui::Checkbox("Item ESP", &g.g_ESP_Item);
-        ImGui::Checkbox("Corpse ESP", &g.g_ESP_Item);
+        ImGui::Checkbox("Corpse ESP", &g.g_ESP_Corpse);
         ImGui::Checkbox("Extract ESP", &g.g_ESP_Exfil); // exfiltrate
         ImGui::Checkbox("Grenade ESP", &g.g_ESP_Grenade);
 
