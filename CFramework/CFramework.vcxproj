@@ -168,6 +168,7 @@
     <ClInclude Include="Cheat\Framework.h" />
     <ClInclude Include="Cheat\SDK\CExfil\CExfil.h" />
     <ClInclude Include="Cheat\SDK\CItem\CItem.h" />
+    <ClInclude Include="Cheat\SDK\CItem\ItemList.h" />
     <ClInclude Include="Cheat\SDK\CPlayer\CPlayer.h" />
     <ClInclude Include="Cheat\SDK\GameSDK\GameSDK.h" />
     <ClInclude Include="Cheat\SDK\GameSDK\Offset.h" />

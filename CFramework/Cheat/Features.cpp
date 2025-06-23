@@ -2,30 +2,28 @@
 
 void CFramework::MiscAll()
 {
-    /*
-    uintptr_t LocalAddr = local.m_address;
-
     // BasePointer
-    uintptr_t WeaponAnimation = pLocal->GetWeaponAnimation();
-    uintptr_t Physics = m.Read<uintptr_t>(LocalAddr + offset::Player::pPhysics);
+    uintptr_t Physics = m.Read<uintptr_t>(local.m_address + offset::Player::pPhysics);
 
-    uintptr_t BreathEffector = m.Read<uintptr_t>(WeaponAnimation + 0x28);
-    uintptr_t Stamina = m.Read<uintptr_t>(Physics + 0x38);
+    uintptr_t BreathEffector = m.Read<uintptr_t>(local.m_pWeaponAnimation + offset::WeaponAnimations::Breath);
 
+    uintptr_t Stamina = m.Read<uintptr_t>(Physics + offset::Physics::Stamina);
+
+    /*
     // No Recoil/Sway
     if (g.g_NoSway) {
-        m.Write<int>(WeaponAnimation + 0x138, 1);
+        m.Write<int>(local.m_pWeaponAnimation + 0x140, 1); // Mask?
         m.Write<float>(BreathEffector + 0xa4, 0.001f);
     }
+    */
 
     // InfStamina
     if (g.g_InfStamina && m.Read<float>(Stamina + 0x48) < 85.f)
-        m.Write<float>(Stamina + 0x48, 90.f);
+        m.Write<float>(Stamina + 0x48, 100.f);
 
     // NoFall Damage
-    if (g.g_NoFallDmg && m.Read<float>(Physics + 0xBC) != 0.f)
-        m.Write<float>(Physics + 0xBC, 0.f);
-        */
+    if (g.g_NoFallDmg && m.Read<float>(Physics + offset::Physics::FallDamageMultiplier) != 0.f)
+        m.Write<float>(Physics + offset::Physics::FallDamageMultiplier, 0.f);
 }
 
 void CFramework::GetESPInfo(const int& SpawnType, std::string& vOutStr, ImColor& vOutColor)
