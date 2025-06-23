@@ -57,6 +57,17 @@ namespace offset
 	// EFT.Animations.ProceduralWeaponAnimation
 	namespace WeaponAnimations
 	{
+		constexpr auto Breath = 0x30;
 		constexpr auto isAiming = 0x1C5;
+	}
+
+	// .BasePhysicalClass
+	namespace Physics
+	{
+		constexpr auto Stamina = 0x38;
+		constexpr auto HandsStamina = 0x40;
+		constexpr auto Oxygen = 0x40;
+		constexpr auto FallDamageMultiplier = 0xBC;
+		constexpr auto OxygenRestoreRate = 0xD4;
 	}
 }
