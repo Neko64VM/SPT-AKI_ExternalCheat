@@ -20,42 +20,46 @@ void CFramework::UpdateList()
     while (g.process_active)
     {
         // Sleep...
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         
         // 仮のリスト用変数
-        std::vector<CPlayer>    list_player{};
-        std::vector<uintptr_t>  list_grenade{};
+        std::vector<CPlayer> player_list;
 
         if (g.g_ESP)
         {
-            // not In raid
+            // not Inraid
             if (!tarkov->Update())
+            {
+                std::lock_guard<std::mutex> lock0(m_mtxEntityList);
+                m_vecEntityList.clear();
                 continue;
+            }
 
-            // PlayerList
             const auto GameWorld = tarkov->m_pLocalGameWorld;
-            const auto registered_player = m.Read<uintptr_t>(GameWorld + offset::RegisteredPlayers);
-            const auto entity_array = m.Read<UnityList>(registered_player);
-
-            if (entity_array.count <= 0)
-                continue;
-            else if (entity_array.list_address == NULL)
-                continue;
-
             local.m_address = m.Read<uintptr_t>(GameWorld + offset::MainPlayer);
 
             if (local.m_address != NULL)
             {
                 local.UpdateStatic();
-                local.Update();
 
-                auto player_list = m.Read<CGameObjectList>(entity_array.list_address + 0x20);
+                if (!local.Update())
+                    continue;
+
+                const auto RegisteredPlayers = m.Read<uintptr_t>(GameWorld + offset::RegisteredPlayers);
+                const auto EntityArray = m.Read<UnityList>(RegisteredPlayers);
+
+                if (EntityArray.count <= 0)
+                    continue;
+                else if (EntityArray.list_address == NULL)
+                    continue;
+
+                auto vecPlayer = m.Read<CGameObjectList>(EntityArray.list_address + 0x20);
 
                 // ESP用EntityListを構築
-                for (auto i = 0; i < entity_array.count; i++)
+                for (auto i = 0; i < EntityArray.count; i++)
                 {
                     CPlayer p = CPlayer();
-                    p.m_address = player_list.address[i];
+                    p.m_address = vecPlayer.address[i];
 
                     if (p.m_address != NULL && p.m_address != local.m_address) 
                     {
@@ -64,7 +68,7 @@ void CFramework::UpdateList()
                         // Distance check
                         if (GetDistance(local.m_vecOrigin, p.GetBonePosition(BONE_ORIGIN)) < g.g_ESP_MaxDistance)
                         {
-                            list_player.push_back(p);
+                            player_list.push_back(p);
                         }
                     }
                 }
@@ -76,9 +80,7 @@ void CFramework::UpdateList()
         }
 
         std::lock_guard<std::mutex> lock0(m_mtxEntityList);
-        m_vecEntityList = list_player;
-        
-        //GrenadeList = list_grenade;
+        m_vecEntityList = player_list;
     }
 }
 
@@ -87,7 +89,7 @@ void CFramework::UpdateStaticList() // C6262 :(
 {
     while (g.process_active)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::this_thread::sleep_for(std::chrono::seconds(3));
 
         std::vector<CItem>  list_item{};
         std::vector<CExfil> list_exfil{};
@@ -123,6 +125,8 @@ void CFramework::UpdateStaticList() // C6262 :(
             {
                 const auto LootList = m.Read<uintptr_t>(tarkov->m_pLocalGameWorld + offset::LootList);
                 const auto ItemArray = m.Read<UnityList>(LootList);
+
+                std::cout << ItemArray.count << std::endl;
 
                 if (ItemArray.count != 0)
                 {

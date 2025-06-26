@@ -44,6 +44,15 @@ void CFramework::RenderESP()
     // ViewMatrix
     Matrix ViewMatrix = tarkov->GetViewMatrix(); // WorldToScreenの度に呼び出す必要はない
 
+    // Radar
+    static Vector2 s_radar_size{ 250.f, 250.f };
+    static Vector2 s_radar_pos{ 25.f, g.GameRect.bottom - (s_radar_size.y + 25.f) };
+    static Vector2 s_radar_center = { s_radar_pos.x + s_radar_size.x / 2.f, s_radar_pos.y + s_radar_size.y / 2.f };
+
+    DrawLine(Vector2(s_radar_center.x, s_radar_pos.y), Vector2(s_radar_center.x, s_radar_pos.y + s_radar_size.y), ImColor(1.f, 1.f, 1.f, 1.f), 1.f);
+    DrawLine(Vector2(s_radar_pos.x, s_radar_center.y), Vector2(s_radar_pos.x + s_radar_size.x, s_radar_center.y), ImColor(1.f, 1.f, 1.f, 1.f), 1.f);
+    DrawCircleFilled(s_radar_center, 3.f, ImColor(0.f, 0.65f, 1.f, 1.f), 1.f);
+
     // るーぷするよ
     for (auto& entity : GetEntityList())
     {
@@ -234,13 +243,36 @@ void CFramework::RenderESP()
 
             if (!pItem->m_bIsCorpse && pItem->m_szItemName.empty())
                 continue;
-            else if (!g.g_ESP_Corpse && pItem->m_bIsCorpse)
-                continue;
+
+            if (!g.g_ESP_Corpse)
+            {
+                if (pItem->m_bIsCorpse)
+                    continue;
+                else if (pItem->m_iMarketPrice < g.g_ESP_ItemPrice)
+                    continue;
+            }
 
             float ItemDistance = GetDistance(pLocal->m_vecOrigin, pItem->m_vecOrigin);
 
+            std::string vItemTx = pItem->m_bIsCorpse ? "Corpse" : pItem->m_szItemName;
+
+            if (!pItem->m_bIsCorpse)
+                vItemTx += " [" + std::to_string(pItem->m_iMarketPrice / 1000) + "K]";
+
+            ImColor itemCol = pItem->m_bIsCorpse ? Col_ESP_Corpse : Col_ESP_Item_Normal;
+
+            bool rare_check = false;
+
+            if (pItem->m_iMarketPrice > 250000) {
+                rare_check = true;
+                itemCol = Col_ESP_Item_Rare;
+            }
+            else if (pItem->m_iMarketPrice > 75000) {
+                itemCol = Col_ESP_Item_Mid;
+            }
+
             // Distance Check
-            if (ItemDistance > g.g_ESP_MaxItemDistance)
+            if (!rare_check && ItemDistance > g.g_ESP_MaxItemDistance)
                 continue;
 
             Vector2 pItemScreen{};
@@ -250,11 +282,8 @@ void CFramework::RenderESP()
             if (!InScreen(pItemScreen))
                 continue;
 
-            std::string vItemTx = pItem->m_bIsCorpse ? "Corpse" : pItem->m_szItemName;
-            vItemTx +="[" + std::to_string((int)ItemDistance) + "m]";
-
-            ImColor itemCol = pItem->m_bIsCorpse ? Col_ESP_Corpse : Col_ESP_RareItem;
-
+           
+           
             ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(pItemScreen.x, pItemScreen.y - 2.f), 2.f, itemCol, 0.f);
 
             String(ImVec2(pItemScreen.x - (ImGui::CalcTextSize(vItemTx.c_str()).x / 2.f), pItemScreen.y), itemCol, vItemTx.c_str());

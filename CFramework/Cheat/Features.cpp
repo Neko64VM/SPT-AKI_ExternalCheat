@@ -17,6 +17,15 @@ void CFramework::MiscAll()
     }
     */
 
+    /*
+    auto _showDirection = m.Read<Vector3>(local.m_pWeaponAnimation + 0x22C);
+
+    printf("%.1f, %.1f, %.1f\n", _showDirection.x, _showDirection.y, _showDirection.z);
+
+    if (GetAsyncKeyState(VK_HOME) & 0x8000)
+        m.Write<Vector3>(local.m_pWeaponAnimation + 0x22C, Vector3(0.03f, 0.f, 0.f));
+        */
+
     // InfStamina
     if (g.g_InfStamina && m.Read<float>(Stamina + 0x48) < 85.f)
         m.Write<float>(Stamina + 0x48, 100.f);

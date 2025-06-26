@@ -108,12 +108,14 @@ enum SkeletonBoneID : int
 	CRightPalm = 8
 };
 
-// SPT
+// SPT - WildSpawnType
 enum WildSpanwType : int
 {
 	// Scav
 	SNIPER_SCAV = 0,
 	SCAV = 1,
+
+	// bossTest = 2,
 
 	// Customs
 	RESHALA_BOSS = 3,
@@ -140,7 +142,7 @@ enum WildSpanwType : int
 	SANITOR_BOSS = 17,
 
 	// Global
-	NORMAL_SCAV = 19, // è≠Çµã≠âªÇ≥ÇÍÇΩScav (?????
+	NORMAL_SCAV = 19, // assaultGroup
 	CULTIST_01_SCAV = 20,
 	CULTIST_02_SCAV = 21,
 

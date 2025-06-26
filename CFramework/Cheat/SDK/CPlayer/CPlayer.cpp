@@ -29,7 +29,7 @@ void CPlayer::UpdateStatic()
 	m_pInfo = m.Read<uintptr_t>(m_pProfile + 0x40);
 	m_pSetting = m.Read<uintptr_t>(m_pInfo + 0x50);
 
-	m.Read<uintptr_t>(m_address + offset::Player::pWeaponAnimation);
+	m_pWeaponAnimation = m.Read<uintptr_t>(m_address + offset::Player::pWeaponAnimation);
 
 	// Player data
 	m_iSpawnType = m.Read<int>(m_pSetting + 0x10); // SpawnType

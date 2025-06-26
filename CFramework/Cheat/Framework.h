@@ -66,7 +66,9 @@ private:
     ImColor Col_ESP_ExfilClose = { 1.f, 0.3f, 0.f, 0.5f };
 
     ImColor Col_ESP_Corpse = { 1.f, 1.f, 1.f, 0.9f };
-    ImColor Col_ESP_RareItem = { 1.f, 0.f, 0.f, 0.9f };
+    ImColor Col_ESP_Item_Normal = { 1.f, 1.f, 1.f, 0.7f };
+    ImColor Col_ESP_Item_Mid = { 1.f, 0.6f, 0.f, 0.7f };
+    ImColor Col_ESP_Item_Rare = { 1.f, 0.f, 0.f, 0.7f };
 
     ImColor CrosshairColor = { 0.f, 1.f, 0.f, 1.f };
 
