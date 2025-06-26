@@ -170,7 +170,10 @@ void CFramework::RenderMenu()
         {
             ImGui::Text("[+] Item");
             ImGui::ColorEdit4("Corpse", &Col_ESP_Corpse.Value.x);
-            ImGui::ColorEdit4("Rare", &Col_ESP_RareItem.Value.x);
+
+            ImGui::ColorEdit4("Normal", &Col_ESP_Item_Normal.Value.x);
+            ImGui::ColorEdit4("Maybe Rare", &Col_ESP_Item_Mid.Value.x);
+            ImGui::ColorEdit4("Rare", &Col_ESP_Item_Rare.Value.x);
             
             ImGui::NewLine();
             ImGui::Spacing();

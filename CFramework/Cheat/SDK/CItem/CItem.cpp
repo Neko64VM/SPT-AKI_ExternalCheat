@@ -37,22 +37,15 @@ bool CItem::Update()
 	// ƒRƒ“ƒeƒi/Ž€‘Ì‚Å‚Í‚È‚©‚Á‚½‚ç
 	if (className.compare("ObservedCorpse") && className.compare("Corpse"))
 	{
-		/*
-		uintptr_t ItemTemplate = m.Read<uintptr_t>(address + 0x40);
-		uintptr_t nameAddr = m.Read<uintptr_t>(ItemTemplate + 0x28);
-		auto dwadwad = m.ReadString(nameAddr, 128);
-		*/
-
 		// ID
 		char ItemID[64]{};
-		uintptr_t BsgId = m.ReadChain(address, { 0x10, 0x28, 0xB8, 0x40, 0x60 });
-
-		const int length = m.Read<int>(BsgId + 0x10);
+		uintptr_t pBsgId = m.ReadChain(address, { 0x10, 0x28, 0xB8, 0x40, 0x60 });
+		const int length = m.Read<int>(pBsgId + 0x10);
 
 		if (length > 0)
 		{
 			for (int j = 0; j < length; j++)
-				ItemID[j] = m.Read<char>(BsgId + 0x18 + (j * 0x2));
+				ItemID[j] = m.Read<char>(pBsgId + 0x18 + (j * 0x2));
 
 			auto result = findDataById(itemList, ItemID);
 			if (result)
