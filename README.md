@@ -5,13 +5,14 @@ SPT-AKI 3.11.3 向けの外部チートです。チート開発に対する興�
 ## 機能
 * Player ESP
 * Exfil ESP
-* Item ESP（Not work）
+* Item ESP
 * Grenade ESP
-* MISCs (Not Work)
+* Inf.Stamina, NoFallDamage, NoRecoil/Sway(not work)
 * MenuKey : INSERT
 
 ## 備考
 * CPU使用率が非常に高いです。全体的な改善が必要ですがめんどくさいです。
+* ヒントとしては、「マルチスレッド化」「R/WPMの削減」「不必要な機能の削減」「コード/ロジックの最適化」が挙げられます。
 
 ## 実行
 必要なライブラリは全て揃っているので、VisualStudioでビルドすれば普通に動くはずです。  
